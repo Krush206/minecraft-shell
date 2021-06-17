@@ -1,0 +1,34 @@
+#!/bin/bash
+in=rcon_in
+
+while read -r cmds
+do
+  if echo "$cmds" | dos2unix | \
+  grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !info$'
+  then
+    echo "/say $(uname -a)" | nc -U $in
+  elif echo "$cmds" | dos2unix | \
+  grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !date$'
+  then
+    echo "/say $(date)" | nc -U $in
+  elif echo "$cmds" | dos2unix | \
+  grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !script$' ||
+  echo "$cmds" | dos2unix | \
+  grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !license$' ||
+  echo "$cmds" | dos2unix | \
+  grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !source$'
+  then
+    echo "/say Minecraft Shell - A Unix shell script made by a Unix guru." | \
+    nc -U $in
+    echo "/say Minecraft Shell is released under the terms of the GNU AGPLv3 license." | \
+    nc -U $in
+    echo "/say You may ask an administrator for the modified source code of this program." | \
+    nc -U $in
+    echo "/say The original source code can be found at: https://github.com/Krush206/minecraft-shell" | \
+    nc -U $in
+  elif echo "$cmds" | dos2unix | \
+  grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !give minecraft:.*'
+  then
+    echo "$cmds" | sed --posix -u 's/.*: </\/give /;s/> !give//' | nc -U $in
+  fi
+done
