@@ -3,19 +3,19 @@ in=rcon_in
 
 while read -r cmds
 do
-  if echo "$cmds" | dos2unix | \
+  if echo "$cmds" | \
   grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !info$'
   then
     echo "/say $(uname -a)" | nc -U $in
-  elif echo "$cmds" | dos2unix | \
+  elif echo "$cmds" | \
   grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !date$'
   then
     echo "/say $(date)" | nc -U $in
-  elif echo "$cmds" | dos2unix | \
+  elif echo "$cmds" | \
   grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !script$' ||
-  echo "$cmds" | dos2unix | \
+  echo "$cmds" | \
   grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !license$' ||
-  echo "$cmds" | dos2unix | \
+  echo "$cmds" | \
   grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !source$'
   then
     echo "/say Minecraft Shell - A Unix shell script made by a Unix guru." | \
@@ -26,14 +26,14 @@ do
     nc -U $in
     echo "/say The original source code can be found at: https://github.com/Krush206/minecraft-shell" | \
     nc -U $in
-  elif echo "$cmds" | dos2unix | \
+  elif echo "$cmds" | \
   grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !guild'
   then
-    player=$(echo "$cmds" | dos2unix | sed --posix -u 's/.*<//;s/>.*//')
-    if echo "$cmds" | dos2unix | \
+    player=$(echo "$cmds" | sed --posix -u 's/.*<//;s/>.*//')
+    if echo "$cmds" | \
     grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !guild create [a-zA-Z0-9]\{2,10\}$'
     then
-      guild=$(echo "$cmds" | dos2unix | sed --posix -u 's/^.*create //')
+      guild=$(echo "$cmds" | sed --posix -u 's/^.*create //')
       if ! grep -qa "^$guild" guilds
       then
         echo "$guild $player" >> guilds
@@ -43,10 +43,10 @@ do
         echo "/w $player This guild already exists in the database!" | \
         nc -U $in
       fi
-    elif echo "$cmds" | dos2unix | \
+    elif echo "$cmds" | \
     grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !guild join [a-zA-Z0-9]\{2,10\}$'
     then
-      guild=$(echo "$cmds" | dos2unix | sed --posix -u 's/^.*join //')
+      guild=$(echo "$cmds" | sed --posix -u 's/^.*join //')
       if ! grep -qa "$player" guilds
       then
         if grep -qwa "$guild" guilds
@@ -61,7 +61,7 @@ do
         echo "/w $player You must first leave your current guild to join another!" | \
         nc -U $in
       fi
-    elif echo "$cmds" | dos2unix | \
+    elif echo "$cmds" | \
     grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !guild disband$'
     then
       if grep -qa "$player" guilds
@@ -79,7 +79,7 @@ do
         echo "/w $player You are not currently in a guild!" | \
         nc -U $in
       fi
-    elif echo "$cmds" | dos2unix | \
+    elif echo "$cmds" | \
     grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !guild leave$'
     then
       if grep -qa "$player" guilds

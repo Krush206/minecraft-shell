@@ -8,7 +8,7 @@ Shell (Bash) scripts for Minecraft dedicated servers, based on a RCON reimplemen
 #### How to use
 Do not have the server running, install [socat](http://www.dest-unreach.org/socat), change the scripts' execution permissions and run the following:\
 `nc -Ukl rcon_in | java -jar <path/to/server.jar> nogui | tee -a rcon_log | nc -Ukl rcon_out &`\
-`socat -u unix:rcon_out,reuseaddr exec:"./rcon_commands" &`\
+`socat -u unix:rcon_out,reuseaddr,crnl exec:"./rcon_commands" &`\
 `./rcon_announce &`\
 To enable external RCON connections, do the following:\
 (For logs.) `socat -U tcp-l:<port>,fork,reuseaddr exec:"tail -f rcon_log" &`\
