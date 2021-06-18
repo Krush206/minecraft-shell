@@ -66,7 +66,7 @@ do
     then
       if grep -qa "$player" guilds
       then
-        if grep -qa "^$(sed --posix -nu /$player/p guilds | awk '{ print $1 }') $player" guilds
+        if grep -qa "^$(sed --posix -nu /$player/p guilds | awk --posix '{ print $1 }') $player" guilds
         then
           sed --posix -i "/$player/d" guilds
           echo "/w $player You disbanded the guild!" | \
