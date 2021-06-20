@@ -95,5 +95,61 @@ do
       echo "/tellraw $player {\"text\":\"Usage: !guild <create|join|disband|leave>\",\"color\":\"red\"}" | \
       nc -U $in
     fi
+  elif echo "$cmds" | \
+  grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !warp'
+  then
+    player=$(echo "$cmds" | sed --posix -u 's/.*<//;s/>.*//')
+    if grep -qwa "$player" ops.json
+    then
+      if echo "$cmds" | \
+      grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !warp to [a-zA-Z0-9]\{1,16\}$'
+      then
+        warp=$(echo "$cmds" | sed --posix -u 's/.*!warp to //')
+        if grep -qwa "$warp" warps
+        then
+          echo "/tp $player $(sed --posix -nu "s/$warp //p" warps)" | nc -U $in
+        else
+          echo "/tellraw $player {\"text\":\"This warp does not exist!\",\"color\":\"red\"}" | \
+          nc -U $in
+        fi
+      elif echo "$cmds" | \
+      grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !warp set [a-zA-Z0-9]\{1,16\}$'
+      then
+        warp=$(echo "$cmds" | sed --posix -u 's/.*!warp set //')
+        if ! grep -qwa "$warp" warps
+        then
+          echo "/tp $player ~ ~ ~" | nc -U $in
+          read -r position
+          position=$(echo -n "$position" | sed --posix -u "s/.*$player to //;s/[,]//g")
+          echo "$warp $position" >> warps
+        else
+          echo "/tellraw $player {\"text\":\"This warp already exists in the database!\",\"color\":\"red\"}" | \
+          nc -U $in
+        fi
+      elif echo "$cmds" | \
+      grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !warp unset [a-zA-Z0-9]\{1,16\}$'
+      then
+        warp=$(echo "$cmds" | sed --posix -u 's/.*!warp unset //')
+        if grep -qwa "$warp" warps
+        then
+          sed --posix -i "/$warp [0-9]*/d" warps
+          echo "/tellraw $player {\"text\":\"Warp $warp has been deleted!\",\"color\":\"yellow\"}" | \
+          nc -U $in
+        else
+          echo "/tellraw $player {\"text\":\"This warp does not exist!\",\"color\":\"red\"}" | \
+          nc -U $in
+        fi
+      elif echo "$cmds" | \
+      grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !warp list$'
+      then
+        echo "/tellraw $player \"$(awk --posix '{ printf "%s ",$1 }' warps)\"" | nc -U $in
+      else
+        echo "/tellraw $player {\"text\":\"Usage: !warp <set|list|unset|to>\",\"color\":\"red\"}" | \
+        nc -U $in
+      fi
+    else
+      echo "/tellraw $player {\"text\":\"You may not perform this command!\",\"color\":\"red\"}" | \
+      nc -U $in
+    fi
   fi
 done
