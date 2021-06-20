@@ -37,10 +37,10 @@ do
       if ! grep -qwa "^$guild" guilds
       then
         echo "$guild $player" >> guilds
-        echo "/w $player Guild created successfully!" | \
+        echo "/tellraw $player {\"text\":\"Guild created successfully!\",\"color\":\"green\"}" | \
         nc -U $in
       else
-        echo "/w $player This guild already exists in the database!" | \
+        echo "/tellraw $player {\"text\":\"This guild already exists in the database!\",\"color\":\"red\"}" | \
         nc -U $in
       fi
     elif echo "$cmds" | \
@@ -52,13 +52,13 @@ do
         if grep -qwa "$guild" guilds
         then
           sed --posix -i "/$guild/ s/$/ $player/" guilds
-          echo "/w $player Joined $guild guild successfully!" | \
+          echo "/tellraw $player {\"text\":\"Joined $guild guild successfully!\",\"color\":\"green\"}" | \
           nc -U $in
         else
-          echo "/w $player This guild does not exist!" | nc -U $in
+          echo "/tellraw $player {\"text\":\"This guild does not exist!\",\"color\":\"red\"}" | nc -U $in
         fi
       else
-        echo "/w $player You must first leave your current guild to join another!" | \
+        echo "/tellraw $player {\"text\":\"You must first leave your current guild to join another!\",\"color\":\"red\"}" | \
         nc -U $in
       fi
     elif echo "$cmds" | \
@@ -69,14 +69,14 @@ do
         if grep -qwa "^$(sed --posix -nu /$player/p guilds | awk --posix '{ print $1 }') $player" guilds
         then
           sed --posix -i "/$player/d" guilds
-          echo "/w $player You disbanded the guild!" | \
+          echo "/tellraw $player {\"text\":\"You disbanded the guild!\",\"color\":\"yellow\"}" | \
           nc -U $in
         else
-          echo "/w $player You are not the owner of the guild!" | \
+          echo "/tellraw $player {\"text\":\"You are not the owner of the guild!\",\"color\":\"red\"}" | \
           nc -U $in
         fi
       else
-        echo "/w $player You are not currently in a guild!" | \
+        echo "/tellraw $player {\"text\":\"You are not currently in a guild!\",\"color\":\"red\"}" | \
         nc -U $in
       fi
     elif echo "$cmds" | \
@@ -85,14 +85,14 @@ do
       if grep -qwa "$player" guilds
       then
         sed --posix -i "s/ $player//" guilds
-        echo "/w $player You left the guild!" | \
+        echo "/tellraw $player {\"text\":\"You left the guild!\",\"color\":\"yellow\"}" | \
         nc -U $in
       else
-        echo "/w $player You are not currently in a guild!" | \
+        echo "/tellraw $player {\"text\":\"You are not currently in a guild!\",\"color\":\"red\"}" | \
         nc -U $in
       fi
     else
-      echo "/w $player Usage: !guild <create|disband|leave>" | \
+      echo "/tellraw $player {\"text\":\"Usage: !guild <create|join|disband|leave>\",\"color\":\"red\"}" | \
       nc -U $in
     fi
   fi
