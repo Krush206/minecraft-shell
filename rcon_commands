@@ -160,6 +160,7 @@ do
       warp=$(sed -nu "s/$(echo "$cmds" | sed --posix -u 's/.*to //') //p" warps)
       echo "/tp $player $warp" | nc -U $in
     else
+      player=$(echo "$cmds" | sed --posix -u 's/.*<//;s/>.*//')
       echo "/tellraw $player {\"text\":\"You may not perform this command!\",\"color\":\"red\"}" | \
       nc -U $in
     fi
