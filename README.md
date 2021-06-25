@@ -3,7 +3,7 @@ Shell (Bash) scripts for Minecraft dedicated servers, based on a RCON reimplemen
 
 #### Scripts descriptions
 *rcon_announce*: Periodically display a set of three messages after five minutes + two other messages, after 30 seconds, counted from the five minutes.\
-*rcon_commands*: Execute commands requested by a player; currently, the commands are: !date (*date* Unix command), !info (*uname -a* Unix command), !script (script information; credits) and !guild (manage guilds).
+*rcon_commands*: Execute commands requested by a player; currently, the commands are: !date (*date* Unix command), !info (*uname -a* Unix command), !script (script information; credits), !warp (manage warps) and !guild (manage guilds).
 
 #### How to use
 Do not have the server running, install [socat](http://www.dest-unreach.org/socat), change the scripts' execution permissions and run the following:\
