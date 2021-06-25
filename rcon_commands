@@ -4,6 +4,20 @@ in=rcon_in
 while read -r cmds
 do
   if echo "$cmds" | \
+  grep -qa \
+  '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: .*\[/[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*] logged in with entity id [0-9]* at (.*)$'
+  then
+    if player=$(echo "$cmds" | sed -u 's/\[\/[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*].*//;s/.*: //') ; \
+    ip=$(echo "$cmds" | sed -u "s/.*$player\[\///;s/:.*//") ; ! grep -Fqwa $player auth && ! grep -Fqwa $ip auth
+    then
+      echo "$player $ip" >> auth
+    elif grep -Fqxa "$player $ip" auth
+    then
+      true
+    else
+      echo "/kick $player You may not use this username!" | nc -U $in
+    fi
+  elif echo "$cmds" | \
   grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> !info$'
   then
     echo "/say $(uname -a)" | nc -U $in
