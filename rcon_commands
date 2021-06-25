@@ -11,10 +11,8 @@ do
     ip=$(echo "$cmds" | sed -u "s/.*$player\[\///;s/:.*//") ; ! grep -Fqwa $player auth && ! grep -Fqwa $ip auth
     then
       echo "$player $ip" >> auth
-    elif grep -Fqxa "$player $ip" auth
-    then
-      true
     else
+      grep -Fqxa "$player $ip" auth || \
       echo "/kick $player You may not use this username!" | nc -U $in
     fi
   elif echo "$cmds" | \
