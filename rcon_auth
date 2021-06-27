@@ -1,0 +1,19 @@
+#!/bin/bash
+in=rcon_in
+
+while read -r auth
+do
+  if echo "$auth" | \
+  grep -qa \
+  '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: .*\[/[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*] logged in with entity id [0-9]* at (.*)$'
+  then
+    if player=$(echo "$auth" | sed -u 's/\[\/[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*].*//;s/.*: //') ;
+    ip=$(echo "$auth" | sed -u "s/.*\[\///;s/:.*//") ; ! grep -qwa "^$player" auth && ! grep -qwa "$ip$" auth
+    then
+      echo "$player $ip" >> auth
+    else
+      grep -Fqxa "$player $ip" auth ||
+      echo "/kick $player You may not use this username!" | nc -U $in
+    fi
+  fi
+done
