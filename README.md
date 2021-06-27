@@ -8,12 +8,12 @@ Shell (Bash) scripts for Minecraft dedicated servers, based on a RCON reimplemen
 
 #### How to use
 Do not have the server running, install [socat](http://www.dest-unreach.org/socat), change the scripts' execution permissions and run the following:\
-`nc -Ukl rcon_in | java -jar <path/to/server.jar> nogui | tee -a rcon_log | nc -Ukl rcon_out &`\
-`socat -u exec:"tail -f rcon_log",crnl exec:"./rcon_auth" &`\
-`socat -u unix:rcon_out,reuseaddr,crnl exec:"./rcon_commands" &`\
+`nc -Ukl rcon_in | java -jar <path/to/server.jar> server nogui | tee rcon_out &`\
+`socat -u exec:"tail -f rcon_out",crnl exec:"./rcon_auth" &`\
+`socat -u exec:"tail -f rcon_out",crnl exec:"./rcon_commands" &`\
 `./rcon_announce &`\
 To enable external RCON connections, do the following:\
-(For logs.) `socat -U tcp-l:<port>,fork,reuseaddr exec:"tail -f rcon_log" &`\
+(For logs.) `socat -U tcp-l:<port>,fork,reuseaddr exec:"tail -f rcon_out" &`\
 (For commands.) `socat -u tcp-l:<port>,fork unix:rcon_in,reuseaddr &`\
 To have RCON access, do the following:\
 (For logs.) `nc <server ip> <port> &`\
@@ -26,8 +26,6 @@ Even though the above is true, I'm writing the scripts with POSIX in mind.
 
 Windows users may use [Cygwin](https://cygwin.com) to run the scripts.
 
-Because Minecraft's RCON is terrible, I had to implement one, with Unix domain sockets.
-
-Server logs are outputted to and can be seen in the `rcon_log` file.
+Because Minecraft's RCON is terrible, I had to implement one, with a Unix domain socket.
 
 The scripts should work on both original and CraftBukkit/Spigot servers.
