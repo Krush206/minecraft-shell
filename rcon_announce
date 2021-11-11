@@ -3,16 +3,16 @@ in=rcon_in
 
 while true
 do
-  echo "/say Message one." | nc -U $in
-  echo "/say Message two." | nc -U $in
-  echo "/say Message three." | nc -U $in
+  echo "/say Message one." > $in
+  echo "/say Message two." > $in
+  echo "/say Message three." > $in
   sleep 30
-  echo "/say Message four." | nc -U $in
-  echo "/say Message five." | nc -U $in
+  echo "/say Message four." > $in
+  echo "/say Message five." > $in
   sleep 300
-  echo "/say This server makes use of Minecraft Shell, or parts of it." | nc -U $in
-  echo "/say Minecraft Shell is released under the terms of the GNU AGPLv3 license." | nc -U $in
-  echo "/say You may ask an administrator for the modified source code of this program." | nc -U $in
-  echo "/say The original source code can be found at: https://github.com/Krush206/minecraft-shell" | nc -U $in
+  echo "/say This server makes use of Minecraft Shell, or parts of it." > $in
+  echo "/say Minecraft Shell is released under the terms of the GNU AGPLv3 license." > $in
+  echo "/say You may ask an administrator for the modified source code of this program." > $in
+  echo "/say The original source code can be found at: https://github.com/Krush206/minecraft-shell" > $in
   sleep 45
 done

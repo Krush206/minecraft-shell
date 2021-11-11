@@ -13,7 +13,7 @@ do
       echo "$player $ip" >> auth
     else
       grep -Fqxa "$player $ip" auth ||
-      echo "/kick $player You may not use this username!" | nc -U $in
+      echo "/kick $player You may not use this username!" > $in
     fi
   fi
 done

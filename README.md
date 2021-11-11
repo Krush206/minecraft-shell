@@ -8,13 +8,13 @@ Shell (Bash) scripts for Minecraft dedicated servers, based on a RCON reimplemen
 
 #### How to use
 Do not have the server running, install [socat](http://www.dest-unreach.org/socat), change the scripts' execution permissions and run the following:\
-`nc -Ukl rcon_in | java -jar <path/to/server.jar> server nogui &`\
+`tail -f rcon_in | java -jar <path/to/server.jar> server nogui &`\
 `socat -u exec:"tail -f <path/to/server.jar/logs/latest.log>",crnl exec:"./rcon_auth" &`\
 `socat -u exec:"tail -f <path/to/server.jar/logs/latest.log>",crnl exec:"./rcon_commands" &`\
 `./rcon_announce &`\
 To enable external RCON connections, do the following:\
 (For logs.) `socat -U tcp-l:<port>,fork,reuseaddr exec:"tail -f <path/to/server.jar/logs/latest.log>" &`\
-(For commands.) `socat -u tcp-l:<port>,fork unix:rcon_in,reuseaddr &`\
+(For commands.) `( nc -p<port> -kl > rcon_in & )`\
 To have RCON access, do the following:\
 (For logs.) `nc <server ip> <port> &`\
 (For commands.) `echo <command> | nc <server ip> <port>`
@@ -26,6 +26,6 @@ Even though the above is true, I'm writing the scripts with POSIX in mind.
 
 Windows users may use [Cygwin](https://cygwin.com) to run the scripts.
 
-Because Minecraft's RCON is terrible, I had to implement one, with a Unix domain socket.
+Because Minecraft's RCON is terrible, I had to implement one, with a FIFO (first in, first out).
 
 The scripts should work on both original and CraftBukkit/Spigot servers.
