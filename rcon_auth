@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/tcsh -f
 in=rcon_in
 
 setenv player /tmp/player_io
