@@ -1,5 +1,5 @@
 #!/bin/tcsh -f
-in=rcon_in
+setenv in rcon_in
 
 setenv player /tmp/player_io
 setenv ip /tmp/ip_io
