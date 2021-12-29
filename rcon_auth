@@ -7,13 +7,13 @@ setenv ip /tmp/ip_io
 auth:
   setenv auth "$<"
 
-if echo "$auth" | \
+if ( { ( echo "$auth" | \
 grep -qa \
-'^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: .*\[/[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*] logged in with entity id [0-9]* at (.*)$' \
+'^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: .*\[/[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*] logged in with entity id [0-9]* at (.*)$' ) } ) \
 then
   echo "$auth" | sed -u 's/\[\/[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*].*//;s/.*: //' > $player
   echo "$auth" | sed -u "s/.*\[\///;s/:.*//" > $ip
-  if ! grep -qwa "^`tee < $player`" auth && ! grep -qwa "`tee < $ip`"\$"" auth then
+  if ( ! { ( grep -qwa "^`tee < $player`" auth ) } && ! { ( grep -qwa "`tee < $ip`"\$"" auth ) } ) then
     ( tr '\n' ' ' < $player ; tee < $ip ) >> auth
   else
     grep -Fqxa "`tr '\n' ' ' < $player ; tee < $ip`" auth ||
