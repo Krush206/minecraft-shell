@@ -1,5 +1,5 @@
-# Minecraft Shell
-Shell (Bash) scripts for Minecraft dedicated servers, based on a RCON reimplementation.
+# Minecraft C Shell
+C Shell scripts for Minecraft dedicated servers, based on a RCON reimplementation.
 
 #### Scripts descriptions
 *rcon_announce*: Periodically display a set of three messages after five minutes + two other messages, after 30 seconds, counted from the five minutes.\
@@ -20,9 +20,7 @@ To have RCON access, do the following:\
 (For commands.) `echo <command> | nc <server ip> <port>`
 
 #### Notes
-Since I made them on GNU/Linux, it is unlikely that Unix or other Unix-like operating systems (including macOS) be able to run them, because GNU programs tend to be and act different than these found in Unix and other Unix-like operating systems. However, *BSD and illumos users may already have or can install GNU programs, so they just need to adapt their environment.
-
-Even though the above is true, I'm writing the scripts with POSIX in mind.
+Still need to port rcon_auth.
 
 Windows users may use [Cygwin](https://cygwin.com) to run the scripts.
 
