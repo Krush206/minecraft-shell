@@ -1,8 +1,7 @@
-#!/bin/bash
+#!/bin/tcsh -f
 in=rcon_in
 
-while true
-do
+while 1
   echo "/say Message one." > $in
   echo "/say Message two." > $in
   echo "/say Message three." > $in
@@ -15,4 +14,4 @@ do
   echo "/say You may ask an administrator for the modified source code of this program." > $in
   echo "/say The original source code can be found at: https://github.com/Krush206/minecraft-shell" > $in
   sleep 45
-done
+end
