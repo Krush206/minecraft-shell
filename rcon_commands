@@ -43,7 +43,7 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!guild' ) } ) th
         echo "/tellraw $player {\"text\":\"This guild does not exist!\",\"color\":\"red\"}" > $in
       endif
     else
-      echo "/tellraw $player {\"text\":\"You must endifrst leave your current guild to join another!\",\"color\":\"red\"}" > $in
+      echo "/tellraw $player {\"text\":\"You must first leave your current guild to join another!\",\"color\":\"red\"}" > $in
     endif
   else if ( { ( echo -n "$cmds" | \
   grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <$player> !guild disband$" ) } ) then
