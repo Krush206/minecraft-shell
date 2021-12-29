@@ -20,8 +20,6 @@ To have RCON access, do the following:\
 (For commands.) `echo <command> | nc <server ip> <port>`
 
 #### Notes
-Still need to port rcon_auth.
-
 Windows users may use [Cygwin](https://cygwin.com) to run the scripts.
 
 Because Minecraft's RCON is terrible, I had to implement one, with a FIFO (first in, first out).
