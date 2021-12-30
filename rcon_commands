@@ -87,9 +87,9 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping [a-zA-Z0-
       if ( ! { ( grep -qwa "$warp" warps ) } ) then
         echo "/tp $player ~ ~ ~" > $in
         pos_check:
-          setenv pos_check "$<"
+          setenv position "$<"
 
-        if ( { ( echo "$position" | \
+        if ( { ( echo -n "$position" | \
         grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: Teleported $player to [0-9.,]*" ) } ) then
           setenv position `echo -n "$position" | sed -u "s/.*$player to //;s/,//g"`
           echo "$warp $position" >> warps
