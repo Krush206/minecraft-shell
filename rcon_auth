@@ -16,7 +16,7 @@ then
   if ( ! { ( grep -qwa "^`tee < $player`" auth ) } && ! { ( grep -qwa "`tee < $ip`"\$"" auth ) } ) then
     ( tr '\n' ' ' < $player ; tee < $ip ) >> auth
   else
-    grep -Fqxa "`tr '\n' ' ' < $player ; tee < $ip`" auth ||
+    grep -Fqxa "`tr -d '\n' < $player` `tee < $ip`" auth ||
     echo "/kick `tee < $player` You may not use this username\!" > $in
   endif
 endif
