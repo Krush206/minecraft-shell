@@ -1,5 +1,5 @@
 #!/bin/tcsh -f
-setenv in rcon_in
+setenv in /tmp/rcon_in
 
 while 1
   echo "/say Message one." > $in
