@@ -1,5 +1,5 @@
 #!/bin/bash
-in=rcon_in
+in=/tmp/rcon_in
 
 while read -r auth
 do
