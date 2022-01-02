@@ -1,9 +1,12 @@
-#!/bin/tcsh -f
+#!/bin/tcsh -fVX
 setenv in rcon_in
+setenv player /tmp/player_cmd
 
 cmds:
   setenv cmds "$<"
-  setenv player `echo -n "$cmds" | sed -u 's/.*Warping //;s/ to.*//'`
+  if ( { ( echo -n "$cmds" | grep -qa \
+  '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!' ) } ) \
+  echo -n "$cmds" | sed -u 's/.*<//;s/>.*//' > $player
 
 if ( { ( echo -n "$cmds" | \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!info$' ) } ) then
@@ -24,49 +27,49 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!source$' ) } ) 
 else if ( { ( echo -n "$cmds" | \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!guild' ) } ) then
   if ( { ( echo -n "$cmds" | \
-  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <$player> \!guild create [a-zA-Z0-9]\{2,10\}$" ) } ) then
+  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!guild create [a-zA-Z0-9]\{2,10\}"\$"" ) } ) then
     setenv guild `echo -n "$cmds" | sed -u 's/^.*create //'`
     if ( ! { ( grep -qwa "^$guild" guilds ) } ) then
       echo "$guild $player" >> guilds
-      echo "/tellraw $player {\"text\":\"Guild created successfully\!\",\"color\":\"green\"}" > $in
+      echo "/tellraw $player {"\""text"\"":"\""Guild created successfully\!"\"","\""color"\"":"\""green"\""}" > $in
     else
-      echo "/tellraw $player {\"text\":\"This guild already exists in the database\!\",\"color\":\"red\"}" > $in
+      echo "/tellraw $player {"\""text"\"":"\""This guild already exists in the database\!"\"","\""color"\"":"\""red"\""}" > $in
     endif
   else if ( { ( echo -n "$cmds" | \
-  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <$player> \!guild join [a-zA-Z0-9]\{2,10\}$" ) } ) then
+  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!guild join [a-zA-Z0-9]\{2,10\}"\$"" ) } ) then
     setenv guild `echo -n "$cmds" | sed -u 's/^.*join //'`
     if ( ! { ( grep -qwa "$player" guilds ) } ) then
       if ( { ( grep -qwa "$guild" guilds ) } ) then
         sed -i "/$guild/ s/$/ $player/" guilds
-        echo "/tellraw $player {\"text\":\"Joined $guild guild successfully\!\",\"color\":\"green\"}" > $in
+        echo "/tellraw $player {"\""text"\"":"\""Joined $guild guild successfully\!"\"","\""color"\"":"\""green"\""}" > $in
       else
-        echo "/tellraw $player {\"text\":\"This guild does not exist\!\",\"color\":\"red\"}" > $in
+        echo "/tellraw $player {"\""text"\"":"\""This guild does not exist\!"\"","\""color"\"":"\""red"\""}" > $in
       endif
     else
-      echo "/tellraw $player {\"text\":\"You must first leave your current guild to join another\!\",\"color\":\"red\"}" > $in
+      echo "/tellraw $player {"\""text"\"":"\""You must first leave your current guild to join another\!"\"","\""color"\"":"\""red"\""}" > $in
     endif
   else if ( { ( echo -n "$cmds" | \
-  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <$player> \!guild disband$" ) } ) then
+  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!guild disband"\$"" ) } ) then
     if ( { ( grep -qwa "$player" guilds ) } ) then
       if ( { ( grep -qwa "^`sed -nu /$player/p guilds | awk '{ print $1 }'` $player" guilds ) } ) then
         sed -i "/$player/d" guilds
-        echo "/tellraw $player {\"text\":\"You disbanded the guild\!\",\"color\":\"yellow\"}" > $in
+        echo "/tellraw $player {"\""text"\"":"\""You disbanded the guild\!"\"","\""color"\"":"\""yellow"\""}" > $in
       else
-        echo "/tellraw $player {\"text\":\"You are not the owner of the guild\!\",\"color\":\"red\"}" > $in
+        echo "/tellraw $player {"\""text"\"":"\""You are not the owner of the guild\!"\"","\""color"\"":"\""red"\""}" > $in
       endif
     else
-      echo "/tellraw $player {\"text\":\"You are not currently in a guild\!\",\"color\":\"red\"}" > $in
+      echo "/tellraw $player {"\""text"\"":"\""You are not currently in a guild\!"\"","\""color"\"":"\""red"\""}" > $in
     endif
   else if ( { ( echo -n "$cmds" | \
-  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <$player> \!guild leave$" ) } ) then
+  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!guild leave"\$"" ) } ) then
     if ( { ( grep -qwa "$player" guilds ) } ) then
       sed -i "s/ $player//" guilds
-      echo "/tellraw $player {\"text\":\"You left the guild\!\",\"color\":\"yellow\"}" > $in
+      echo "/tellraw $player {"\""text"\"":"\""You left the guild\!"\"","\""color"\"":"\""yellow"\""}" > $in
     else
-      echo "/tellraw $player {\"text\":\"You are not currently in a guild\!\",\"color\":\"red\"}" > $in
+      echo "/tellraw $player {"\""text"\"":"\""You are not currently in a guild\!"\"","\""color"\"":"\""red"\""}" > $in
     endif
   else
-    echo "/tellraw $player {\"text\":\"Usage: \!guild <create|join|disband|leave>\",\"color\":\"red\"}" > $in
+    echo "/tellraw $player {"\""text"\"":"\""Usage: \!guild <create|join|disband|leave>"\"","\""color"\"":"\""red"\""}" > $in
   endif
 else if ( { ( echo -n "$cmds" | \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!warp' ) } || \
@@ -74,16 +77,16 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!warp' ) } || \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping [a-zA-Z0-9]* to [a-zA-Z0-9]*' ) } ) then
   if ( { ( grep -qwa "$player" ops.json ) } ) then
     if ( { ( echo -n "$cmds" | \
-    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <$player> \!warp to [a-zA-Z0-9]\{1,16\}$" ) } ) then
-      setenv warp `echo -n "$cmds" | sed -u 's/.*\!warp to //'`
+    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp to [a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
+      setenv warp `echo -n "$cmds" | sed -u 's/^.*warp to //'`
       if ( { ( grep -qwa "$warp" warps ) } ) then
-        echo "/tp $player `sed -nu "s/$warp //p" warps`" > $in
+        echo "/tp $player `sed -nu 's/$warp //p' warps`" > $in
       else
-        echo "/tellraw $player {\"text\":\"This warp does not exist\!\",\"color\":\"red\"}" > $in
+        echo "/tellraw $player {"\""text"\"":"\""This warp does not exist\!"\"","\""color"\"":"\""red"\""}" > $in
       endif
     else if ( { ( echo -n "$cmds" | \
-    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <$player> \!warp set [a-zA-Z0-9]\{1,16\}$" ) } ) then
-      setenv warp `echo -n "$cmds" | sed -u 's/.*\!warp set //'`
+    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp set [a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
+      setenv warp `echo -n "$cmds" | sed -u 's/^.*warp set //'`
       if ( ! { ( grep -qwa "$warp" warps ) } ) then
         echo "/tp $player ~ ~ ~" > $in
         pos_check:
@@ -97,22 +100,22 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping [a-zA-Z0-
           goto pos_check
         endif
       else
-        echo "/tellraw $player {\"text\":\"This warp already exists in the database\!\",\"color\":\"red\"}" > $in
+        echo "/tellraw $player {"\""text"\"":"\""This warp already exists in the database\!"\"","\""color"\"":"\""red"\""}" > $in
       endif
     else if ( { ( echo -n "$cmds" | \
-    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <$player> \!warp unset [a-zA-Z0-9]\{1,16\}$" ) } ) then
-      setenv warp `echo -n "$cmds" | sed -u 's/.*\!warp unset //'`
+    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp unset [a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
+      setenv warp `echo -n "$cmds" | sed -u 's/^.*warp unset //'`
       if ( { ( grep -qwa "$warp" warps ) } ) then
         sed -i "/$warp [0-9]*/d" warps
-        echo "/tellraw $player {\"text\":\"Warp $warp has been deleted\!\",\"color\":\"yellow\"}" > $in
+        echo "/tellraw $player {"\""text"\"":"\""Warp $warp has been deleted\!"\"","\""color"\"":"\""yellow"\""}" > $in
       else
-        echo "/tellraw $player {\"text\":\"This warp does not exist\!\",\"color\":\"red\"}" > $in
+        echo "/tellraw $player {"\""text"\"":"\""This warp does not exist\!"\"","\""color"\"":"\""red"\""}" > $in
       endif
     else if ( { ( echo -n "$cmds" | \
-    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <$player> \!warp list$" ) } ) then
-      echo "/tellraw $player \"`awk '{ printf "%s ",$1 }' warps`\"" > $in
+    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp list"\$"" ) } ) then
+      echo "/tellraw $player "`awk '{ printf "%s ",$1 }' warps`"" > $in
     else
-      echo "/tellraw $player {\"text\":\"Usage: \!warp <set|list|unset|to>\",\"color\":\"red\"}" > $in
+      echo "/tellraw $player {"\""text"\"":"\""Usage: \!warp <set|list|unset|to>"\"","\""color"\"":"\""red"\""}" > $in
     endif
   else if ( { ( echo -n "$cmds" | \
   grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping $player to [a-zA-Z0-9]*" ) } ) then
@@ -121,7 +124,7 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping [a-zA-Z0-
     echo "/tp $player $warp" > $in
   else
     setenv player `echo -n "$cmds" | sed -u 's/.*<//;s/>.*//'`
-    echo "/tellraw $player {\"text\":\"You may not perform this command\!\",\"color\":\"red\"}" > $in
+    echo "/tellraw $player {"\""text"\"":"\""You may not perform this command\!"\"","\""color"\"":"\""red"\""}" > $in
   endif
 endif
 goto cmds
