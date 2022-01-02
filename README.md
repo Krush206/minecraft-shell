@@ -25,3 +25,5 @@ Windows users may use [Cygwin](https://cygwin.com) to run the scripts.
 Because Minecraft's RCON is terrible, I had to implement one, with a FIFO (first in, first out).
 
 The scripts should work on both original and CraftBukkit/Spigot servers.
+
+On Unix and Unix-like operating systems, it is recommended to have a `tmpfs` mount on `/tmp`.
