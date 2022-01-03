@@ -43,7 +43,7 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!guild' ) } ) th
     setenv guild `echo -n "$cmds" | sed -u 's/^.*join //'`
     if ( ! { ( grep -qwa "`tee < $player`" guilds ) } ) then
       if ( { ( grep -qwa "$guild" guilds ) } ) then
-        sed -i "/$guild/ s/$/ `tee < $player`/" guilds
+        sed -i "/$guild/ s/"\$"/ `tee < $player`/" guilds
         echo "/tellraw `tee < $player` {"\""text"\"":"\""Joined $guild guild successfully\!"\"","\""color"\"":"\""green"\""}" | tee $in
       else
         echo "/tellraw `tee < $player` {"\""text"\"":"\""This guild does not exist\!"\"","\""color"\"":"\""red"\""}" | tee $in
