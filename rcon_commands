@@ -7,6 +7,9 @@ cmds:
   echo -n "$cmds" | grep -qa \
   '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!' && \
   echo -n "$cmds" | sed -u 's/.*<//;s/>.*//' > $player
+  echo -n "$cmds" | grep -qa \
+  '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping [a-zA-Z0-9]* to [a-zA-Z0-9]*' && \
+  echo -n "$cmds" | sed -u 's/.* Warping //;s/ to .*$//' > $player
 
 if ( { ( echo -n "$cmds" | \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!info$' ) } ) then
@@ -76,7 +79,12 @@ else if ( { ( echo -n "$cmds" | \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!warp' ) } || \
 { ( echo -n "$cmds" | \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping [a-zA-Z0-9]* to [a-zA-Z0-9]*' ) } ) then
-  if ( { ( grep -qwa "`tee < $player`" ops.json ) } ) then
+  if ( { ( echo -n "$cmds" | \
+  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping `tee < $player` to [a-zA-Z0-9]*" ) } ) then
+    setenv warp_check `echo -n "$cmds" | sed -u 's/.*to //'`
+    setenv warp `sed -nu "s/$warp_check//p" warps`
+    echo "/tp `tee < $player` $warp" | tee $in
+  else if ( { ( grep -qwa "`tee < $player`" ops.json ) } ) then
     if ( { ( echo -n "$cmds" | \
     grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp to [a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
       setenv warp `echo -n "$cmds" | sed -u 's/^.*warp to //'`
@@ -119,11 +127,6 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping [a-zA-Z0-
     else
       echo "/tellraw `tee < $player` {"\""text"\"":"\""Usage: \!warp <set|list|unset|to>"\"","\""color"\"":"\""red"\""}" | tee $in
     endif
-  else if ( { ( echo -n "$cmds" | \
-  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping `tee < $player` to [a-zA-Z0-9]*" ) } ) then
-    setenv warp_check `echo -n "$cmds" | sed -u 's/.*to //'`
-    setenv warp `sed -nu "s/$warp_check//p" warps`
-    echo "/tp `tee < $player` $warp" | tee $in
   else
     echo "/tellraw `tee < $player` {"\""text"\"":"\""You may not perform this command\!"\"","\""color"\"":"\""red"\""}" | tee $in
   endif
