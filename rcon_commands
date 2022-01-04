@@ -92,7 +92,7 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!warp' ) } ) the
       if ( ! { ( grep -qwa "$warp" warps ) } ) then
         pos_check:
           echo "/tp `tee < $player` ~ ~ ~" | tee $in
-          setenv position "$<"
+          setenv position "`head -1 | tr -d '\r'`"
 
         if ( { ( echo -n "$position" | \
         grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: Teleported `tee < $player` to [0-9.,]*" ) } ) then
