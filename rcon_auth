@@ -5,7 +5,7 @@ setenv player /tmp/player_io
 setenv ip /tmp/ip_io
 
 auth:
-  setenv auth "$<"
+  setenv auth "`head -1 | tr -d '\r'`"
 
 if ( { ( echo "$auth" | \
 grep -qa \

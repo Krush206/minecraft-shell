@@ -7,12 +7,12 @@ C Shell scripts for Minecraft dedicated servers, based on a RCON reimplementatio
 *rcon_auth*: Authenticate players, basing on usernames and IP addresses.
 
 #### How to use
-Do not have the server running, install [socat](http://www.dest-unreach.org/socat), change the scripts' execution permissions and run the following:\
+Do not have the server running, change the scripts' execution permissions and run the following:\
 `mkfifo /tmp/rcon_in ; tail -f /tmp/rcon_in | java -jar <path/to/server.jar> server nogui &`\
-`socat -u exec:"tail -f <path/to/server.jar/logs/latest.log>",crnl exec:"./rcon_auth" &`\
-`socat -u exec:"tail -f <path/to/server.jar/logs/latest.log>",crnl exec:"./rcon_commands" &`\
+`tail -f <path/to/server.jar/logs/latest.log> | ./rcon_auth" &`\
+`tail -f <path/to/server.jar/logs/latest.log> | ./rcon_commands" &`\
 `./rcon_announce &`\
-To enable external RCON connections, do the following:\
+To enable external RCON connections, install [socat](http://www.dest-unreach.org/socat) and do the following:\
 (For logs.) `socat -U tcp-l:<port>,fork,reuseaddr exec:"tail -f <path/to/server.jar/logs/latest.log>" &`\
 (For commands.) `( nc -p<port> -kl > /tmp/rcon_in & )`\
 To have RCON access, do the following:\
