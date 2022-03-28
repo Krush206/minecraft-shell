@@ -1,4 +1,5 @@
 #!/bin/tcsh -f
+set echo_style = none
 setenv in /tmp/rcon_in
 
 while 1
