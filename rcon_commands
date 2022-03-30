@@ -91,14 +91,11 @@ echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
         pos_check:
           setenv position "`head -1 | tr -d '\r'`"
 
-        if ( { ( echo "$position" | \
-        grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: Teleported `tee < $player` to [0-9.,]*" ) } ) then
-          setenv player_io `tee < $player`
-          setenv position `echo "$position" | sed -u "s/.*$player_io to //;s/,/ /g"`
-          echo "$warp $position" | tee -a warps
-        else
-          goto pos_check
-        endif
+        echo "$position" | \
+        grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: Teleported `tee < $player` to [0-9.,]*" || goto pos_check
+        setenv player_io `tee < $player`
+        setenv position `echo "$position" | sed -u "s/.*$player_io to //;s/,/ /g"`
+        echo "$warp $position" | tee -a warps
       else
         echo "/tellraw `tee < $player` {"\""text"\"":"\""This warp already exists in the database\!"\"","\""color"\"":"\""red"\""}" | tee $in
       endif
