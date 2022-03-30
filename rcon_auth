@@ -1,12 +1,12 @@
 #!/bin/tcsh -f
 set echo_style = none
-setenv in /tmp/rcon_in
+set in = /tmp/rcon_in
 
-setenv player /tmp/player_io
-setenv ip /tmp/ip_io
+set player = /tmp/player_io
+set ip = /tmp/ip_io
 
 auth:
-  setenv auth "`head -1 | tr -d '\r'`"
+  set auth = `head -1 | tr -d '\r'`
 
 if ( { ( echo "$auth" | \
 grep -qa \

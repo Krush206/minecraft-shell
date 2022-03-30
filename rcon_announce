@@ -1,6 +1,6 @@
 #!/bin/tcsh -f
 set echo_style = none
-setenv in /tmp/rcon_in
+set in = /tmp/rcon_in
 
 while { sleep 45 }
   echo "/say Message one." > $in
