@@ -87,8 +87,8 @@ echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
     grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp set [a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
       setenv warp `echo "$cmds" | sed -u 's/^.*warp set //'`
       if ( ! { ( grep -qwa "$warp" warps ) } ) then
+        echo "/tp `tee < $player` ~ ~ ~" | tee $in
         pos_check:
-          echo "/tp `tee < $player` ~ ~ ~" | tee $in
           setenv position "`head -1 | tr -d '\r'`"
 
         if ( { ( echo "$position" | \
