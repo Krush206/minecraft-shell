@@ -1,10 +1,11 @@
 #!/bin/tcsh -f
+set path = (/usr/local/bin /usr/local/sbin /usr/bin /usr/sbin /bin /sbin /usr/local/games /usr/games)
 set echo_style = none
 set in = /tmp/rcon_in
 set player = /tmp/player_cmd
 
 cmds:
-  set cmds = `head -1 | tr -d '\r'`
+  set cmds = "`head -1 | tr -d '\r'`"
 
 if ( { ( echo "$cmds" | \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!info$' ) } ) then
@@ -22,6 +23,10 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!source$' ) } ) 
   echo "/say Minecraft Shell is released under the terms of the GNU AGPLv3 license." | tee $in
   echo "/say You may ask an administrator for the modified source code of this program." | tee $in
   echo "/say The original source code can be found at: https://github.com/Krush206/minecraft-shell" | tee $in
+else if ( { ( echo "$cmds" | \
+grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!roll$' ) } ) then
+  echo "/tellraw @a "\""Rolling dice..."\""" | tee $in
+  grep -ao '[1-6]' < /dev/urandom | echo "/tellraw @a `head -1`" | tee $in
 else if ( { ( echo "$cmds" | \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!guild' && \
 echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
@@ -89,7 +94,7 @@ echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
       if ( ! { ( grep -qwa "$warp" warps ) } ) then
         echo "/tp `tee < $player` ~ ~ ~" | tee $in
         pos_check:
-          set position = `head -1 | tr -d '\r'`
+          set position = "`head -1 | tr -d '\r'`"
 
         echo "$position" | \
         grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: Teleported `tee < $player` to [0-9.,]*" || goto pos_check

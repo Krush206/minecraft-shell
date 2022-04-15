@@ -1,4 +1,5 @@
 #!/bin/tcsh -f
+set path = (/usr/local/bin /usr/local/sbin /usr/bin /usr/sbin /bin /sbin /usr/local/games /usr/games)
 set echo_style = none
 set in = /tmp/rcon_in
 
@@ -6,7 +7,7 @@ set player = /tmp/player_io
 set ip = /tmp/ip_io
 
 auth:
-  set auth = `head -1 | tr -d '\r'`
+  set auth = "`head -1 | tr -d '\r'`"
 
 if ( { ( echo "$auth" | \
 grep -qa \
