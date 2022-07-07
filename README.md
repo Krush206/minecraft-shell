@@ -3,8 +3,9 @@ C Shell scripts for Minecraft dedicated servers, based on a RCON reimplementatio
 
 #### Scripts descriptions
 *rcon_announce*: Periodically display a set of three messages after five minutes + two other messages, after 30 seconds, counted from the five minutes.\
-*rcon_commands*: Execute commands requested by a player; currently, the commands are: !date (*date* Unix command), !info (*uname -a* Unix command), !script (script information; credits), !warp (manage warps) and !guild (manage guilds).\
-*rcon_auth*: Authenticate players, basing on usernames and IP addresses.
+*rcon_commands*: Execute commands requested by a player; currently, the commands are: !date (*date* Unix command), !info (*uname -a* Unix command), !script (script information; credits), !warp (manage warps), !guild (manage guilds) and !roll (roll a dice).\
+*rcon_auth*: Authenticate players, basing on usernames and IP addresses.\
+*rcon_interactive*: Interactive remote connection.
 
 #### How to use
 Do not have the server running, change the scripts' execution permissions and run the following:\
