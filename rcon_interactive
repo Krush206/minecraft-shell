@@ -6,16 +6,16 @@ eval "echo 'Usage: ./rcon_interactive <server ip> <logs port> <commands port>' ;
 exit 1"
 
 set rcon_out=/tmp/rcon_out
-mkfifo $rcon_out >& /dev/null
+set rcon_sig=/tmp/rcon_sig
+mkfifo $rcon_out $rcon_sig >& /dev/null
 
 echo "Remote connection from `whoami`" | \
 nc $1 $3 || exit 1
 clear
 while 1
-  ( exec nc $1 $3 < $rcon_out & )
+  ( nc $1 $3 < $rcon_out > $rcon_sig & )
   glob 'input> '
-  head -1 > $rcon_out
-  ( exec head -5 $rcon_out & )
-  nc $1 $2 > $rcon_out
+  ( head -1 > $rcon_out ; : < $rcon_sig )
+  nc $1 $2 | head -5
 end
 
