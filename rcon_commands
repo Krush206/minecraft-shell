@@ -31,7 +31,7 @@ else if ( { ( echo "$cmds" | \
 grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!guild' && \
 echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
   if ( { ( echo "$cmds" | \
-  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!guild create [a-zA-Z0-9]\{2,10\}"\$"" ) } ) then
+  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!guild create [_a-zA-Z0-9]\{2,10\}"\$"" ) } ) then
     set guild = `echo "$cmds" | sed -u 's/^.*create //'`
     if ( ! { ( grep -qwa "^$guild" guilds ) } ) then
       echo "$guild `tee < $player`" | tee -a guilds
@@ -40,7 +40,7 @@ echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
       echo "/tellraw `tee < $player` {"\""text"\"":"\""This guild already exists in the database\!"\"","\""color"\"":"\""red"\""}" | tee $in
     endif
   else if ( { ( echo "$cmds" | \
-  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!guild join [a-zA-Z0-9]\{2,10\}"\$"" ) } ) then
+  grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!guild join [_a-zA-Z0-9]\{2,10\}"\$"" ) } ) then
     set guild = `echo "$cmds" | sed -u 's/^.*join //'`
     if ( ! { ( grep -qwa "`tee < $player`" guilds ) } ) then
       if ( { ( grep -qwa "$guild" guilds ) } ) then
@@ -81,7 +81,7 @@ grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <.*> \!warp' && \
 echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
   if ( { ( grep -qwa "`tee < $player`" ops.json ) } ) then
     if ( { ( echo "$cmds" | \
-    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp to [a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
+    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp to [_a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
       set warp = `echo "$cmds" | sed -u 's/^.*warp to //'`
       if ( { ( grep -qwa "$warp" warps ) } ) then
         echo "/tp `tee < $player` `sed -nu 's/$warp //p' warps`" | tee $in
@@ -89,7 +89,7 @@ echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
         echo "/tellraw `tee < $player` {"\""text"\"":"\""This warp does not exist\!"\"","\""color"\"":"\""red"\""}" | tee $in
       endif
     else if ( { ( echo "$cmds" | \
-    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp set [a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
+    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp set [_a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
       set warp = `echo "$cmds" | sed -u 's/^.*warp set //'`
       if ( ! { ( grep -qwa "$warp" warps ) } ) then
         echo "/tp `tee < $player` ~ ~ ~" | tee $in
@@ -105,7 +105,7 @@ echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
         echo "/tellraw `tee < $player` {"\""text"\"":"\""This warp already exists in the database\!"\"","\""color"\"":"\""red"\""}" | tee $in
       endif
     else if ( { ( echo "$cmds" | \
-    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp unset [a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
+    grep -qa "^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: <`tee < $player`> \!warp unset [_a-zA-Z0-9]\{1,16\}"\$"" ) } ) then
       set warp = `echo "$cmds" | sed -u 's/^.*warp unset //'`
       if ( { ( grep -qwa "$warp" warps ) } ) then
         sed -i "/$warp [0-9]*/d" warps
@@ -123,7 +123,7 @@ echo "$cmds" | sed -u 's/.*<//;s/>.*//' > $player ) } ) then
     echo "/tellraw `tee < $player` {"\""text"\"":"\""You may not perform this command\!"\"","\""color"\"":"\""red"\""}" | tee $in
   endif
 else if ( { ( echo "$cmds" | \
-grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping [a-zA-Z0-9]* to [a-zA-Z0-9]*' && \
+grep -qa '^\[[0-9]*:[0-9]*:[0-9]*] \[Server thread/INFO]: \[@] Warping [_a-zA-Z0-9]* to [_a-zA-Z0-9]*' && \
 echo "$cmds" | sed -u 's/.* Warping //;s/ to .*$//' > $player ) } ) then
   set warp_check = `echo "$cmds" | sed -u 's/.*to //'`
   set warp = `sed -nu "s/$warp_check//p" warps`
