@@ -15,11 +15,11 @@ grep -qa \
 then
   echo "$auth" | sed -u 's/\[\/[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*].*//;s/.*: //' > $player
   echo "$auth" | sed -u "s/.*\[\///;s/:.*//" > $ip
-  if ( ! { ( grep -qwa "^`tee < $player`" auth ) } && ! { ( grep -qwa "`tee < $ip`"\$"" auth ) } ) then
-    ( tr '\n' ' ' < $player ; tee < $ip ) | tee -a auth
+  if ( ! { ( grep -qwa "^`cat $player`" auth ) } && ! { ( grep -qwa "`cat $ip`"\$"" auth ) } ) then
+    ( tr '\n' ' ' < $player ; cat $ip ) | tee -a auth
   else
-    grep -Fqxa "`tr -d '\n' < $player` `tee < $ip`" auth || \
-    echo "/kick `tee < $player` You may not use this username\!" | tee $in
+    grep -Fqxa "`tr -d '\n' < $player` `cat $ip`" auth || \
+    echo "/kick `cat $player` You may not use this username\!" | tee $in
   endif
 endif
 goto auth
